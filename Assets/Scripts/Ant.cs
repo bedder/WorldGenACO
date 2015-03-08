@@ -3,18 +3,27 @@ using System.Collections;
 using System.Collections.Generic;
 
 public enum AntMode {
-    foraging, toFood, toNest
+    foraging,
+    toFood,
+    toNest
 }
 
 public class Ant : MonoBehaviour {
-    private HexTile currentLocation;
+    // Internal logic variables 
+    private HexTile location;
     private List<HexTile> previousLocations;
     private AntMode mode;
 
+    // Setters/modifiers
+    void setLocation(HexTile newLocation) {
+        location = newLocation;
+    }
+
+    // Public logic functions
     public void tick() {
         switch (mode) {
             case AntMode.foraging:
-                if (followPheromone(currentLocation.getPheromone())) {
+                if (followPheromone(location.getPheromone())) {
                     previousLocations.RemoveRange(0, previousLocations.Count - 1);
                     mode = AntMode.toFood;
                 } else {
@@ -24,10 +33,10 @@ public class Ant : MonoBehaviour {
             case AntMode.toFood:
                 float highestPheromone = 0;
                 HexTile bestNeighbour = null;
-                foreach (HexTile neighbour in currentLocation.neighbours) {
+                foreach (HexTile neighbour in location.neighbours) {
                     if (neighbour != null
                             && neighbour.isPassable()
-                            && (currentLocation.isNest() || neighbour != previousLocations[0])
+                            && (location.isNest() || neighbour != previousLocations[0])
                             && neighbour.getPheromone() > highestPheromone) {
                         highestPheromone = neighbour.getPheromone();
                         bestNeighbour = neighbour;
@@ -37,8 +46,8 @@ public class Ant : MonoBehaviour {
                     mode = AntMode.foraging;
                     randomStep();
                 } else {
-                    previousLocations[0] = currentLocation;
-                    currentLocation = bestNeighbour;
+                    previousLocations[0] = location;
+                    location = bestNeighbour;
                 }
                 break;
             case AntMode.toNest:
@@ -46,22 +55,27 @@ public class Ant : MonoBehaviour {
                 break;
         }
     }
-
     public bool followPheromone(float pheromone) {
         // TODO
         return true;
     }
-
     public void randomStep() {
         while (true) {
             int rnd = Random.Range(0, 6);
-            if (currentLocation.neighbours[rnd] != null
-                    && currentLocation.neighbours[rnd].isPassable()
-                    && currentLocation.neighbours[rnd] != previousLocations[previousLocations.Count - 1]) {
-                previousLocations.Add(currentLocation);
-                currentLocation = currentLocation.neighbours[rnd];
+            if (location.neighbours[rnd] != null
+                    && location.neighbours[rnd].isPassable()
+                    && location.neighbours[rnd] != previousLocations[previousLocations.Count - 1]) {
+                previousLocations.Add(location);
+                location = location.neighbours[rnd];
                 return;
             }
         }
+    }
+
+    // Unity logic functions
+    void awake() {
+        location = null;
+        previousLocations = new List<HexTile>();
+        mode = AntMode.foraging;
     }
 }
