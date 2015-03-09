@@ -392,8 +392,11 @@ MonoBehaviour:
   nTilesX: 100
   nTilesZ: 100
   tileRadius: 1
-  heightFactor: 3
-  perlinFactor: .075000003
+  heightFactor: 8
+  heightOffset: -.075000003
+  perlinFactor: .0299999993
+  distanceFromWaterFactor: 1
+  maxDistanceFromWater: 30
   baseTile: {fileID: 11400000, guid: d314826201170ec43a6226fd18dc4675, type: 2}
 --- !u!4 &897176851
 Transform:

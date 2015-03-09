@@ -31,8 +31,8 @@ public class HexTile : MonoBehaviour {
 
     // Tile type definitions
     public Material[] materials;
-    private static float[] tileHeightBounds = { 0, 0.75f, 1.50f, 2.25f };
-    private static float[] tileMoistureBounds = { 0.2f, 0.4f, 0.6f, 0.8f };
+    public float[] tileHeightBounds = { 0, 0.75f, 1.50f, 2.25f };
+    public float[] tileMoistureBounds = { 0.2f, 0.4f, 0.6f, 0.8f };
 
     // Trivial getters
     public bool isPassable() {
@@ -136,7 +136,7 @@ public class HexTile : MonoBehaviour {
                         return HexType.Snow;
                 }
             default:
-                Destroy(gameObject);
+                //Destroy(gameObject);
                 return HexType.Bare;
         }
     }

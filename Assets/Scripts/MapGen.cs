@@ -7,7 +7,10 @@ public class MapGen : MonoBehaviour {
     public int nTilesZ = 10;
     public float tileRadius = 1f;
     public float heightFactor = 10f;
+    public float heightOffset = 0.5f;
     public float perlinFactor = 0.05f;
+    public float distanceFromWaterFactor = 0.1f;
+    public int maxDistanceFromWater = 30;
 
     // Temp mapgen dynamics variables
     public HexTile baseTile;
@@ -26,15 +29,18 @@ public class MapGen : MonoBehaviour {
         linkTiles();
     }
     private void constructHeightMap() {
-        heightMap = new float[nTilesX * 2 + 1, nTilesZ * 2];
+        int szX = nTilesX * 2 - 1;
+        int szY = nTilesZ * 2;
+
+        heightMap = new float[szX, szY];
 
         // Generate Perlin noise using library functions
         float xOffset = Random.value;
         float yOffset = Random.value;
-        for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
-            for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
-                heightMap[x, y] = Mathf.PerlinNoise(perlinFactor * x + xOffset,
-                                                    perlinFactor * y + yOffset);
+        for (int x = 0 ; x < szX ; x++) {
+            for (int y = 0 ; y < szY ; y++) {
+                heightMap[x, y] = Mathf.Pow(Mathf.PerlinNoise(perlinFactor * x + xOffset,
+                                                              perlinFactor * y + yOffset), 2) + heightOffset;
             }
         }
 
@@ -42,17 +48,51 @@ public class MapGen : MonoBehaviour {
             // TODO
     }
     private void constructWaterMap() {
-        waterMap = new float[nTilesX * 2 + 1, nTilesZ * 2];
+        int szX = nTilesX * 2 - 1;
+        int szY = nTilesZ * 2;
 
-        // TODO
+        waterMap = new float[szX, szY];
 
-        // Temp: Generate randomly
+        // Generate distanceFromWater values
+        int[,] distanceFromWater = new int[szX, szY];
+        for (int x = 0 ; x < szX ; x++)
+            for (int y = 0 ; y < szY ; y++)
+                distanceFromWater[x, y] = (heightMap[x, y] < 0 ? 0 : 30);
+        bool newValue = true;
+        while (newValue) {
+            newValue = false;
+            for (int x = 0 ; x < szX ; x++) {
+                for (int y = 0 ; y < szY ; y++) {
+                    if (x > 0 && distanceFromWater[x - 1, y] + 1 < distanceFromWater[x, y]) {
+                        distanceFromWater[x, y] = distanceFromWater[x - 1, y] + 1;
+                        newValue = true;
+                    }
+                    if (x < szX - 1 && distanceFromWater[x + 1, y] + 1 < distanceFromWater[x, y]) {
+                        distanceFromWater[x, y] = distanceFromWater[x + 1, y] + 1;
+                        newValue = true;
+                    }
+                    if (y > 0 && distanceFromWater[x, y - 1] + 1 < distanceFromWater[x, y]) {
+                        distanceFromWater[x, y] = distanceFromWater[x, y - 1] + 1;
+                        newValue = true;
+                    }
+                    if (y < szY - 1 && distanceFromWater[x, y + 1] + 1 < distanceFromWater[x, y]) {
+                        distanceFromWater[x, y] = distanceFromWater[x, y + 1] + 1;
+                        newValue = true;
+                    }
+                    distanceFromWater[x, y] = Mathf.Min(distanceFromWater[x, y], 30);
+                }
+            }
+        }
+
+        // Generate complete water map
         float xOffset = Random.value;
         float yOffset = Random.value;
         for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
             for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
-                waterMap[x, y] = Mathf.PerlinNoise(perlinFactor * x + xOffset,
-                                                   perlinFactor * y + yOffset);
+                float actualWater = distanceFromWaterFactor * (1 - (distanceFromWater[x, y] / maxDistanceFromWater));
+                float randomWater = 0.2f * Mathf.PerlinNoise(perlinFactor * x + xOffset,
+                                                             perlinFactor * y + yOffset);
+                waterMap[x, y] = actualWater + randomWater;
             }
         }
     }
@@ -110,7 +150,6 @@ public class MapGen : MonoBehaviour {
 
     // Unity logic functions
     void Start() {
-        Debug.Log("In MapGen::start()");
         initTiles();
     }
 }

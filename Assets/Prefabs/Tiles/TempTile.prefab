@@ -113,6 +113,16 @@ MonoBehaviour:
   - {fileID: 2100000, guid: b6387173df045ad4cacf1ef1f11a5912, type: 2}
   - {fileID: 2100000, guid: 691c09e3a157caa4fa118e9aceef82c7, type: 2}
   - {fileID: 2100000, guid: f37f7559923bb0249a966c260a090996, type: 2}
+  tileHeightBounds:
+  - 0
+  - 1
+  - 2
+  - 3
+  tileMoistureBounds:
+  - .200000003
+  - .400000006
+  - .600000024
+  - .800000012
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
