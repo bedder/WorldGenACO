@@ -6,15 +6,16 @@ public class MapGen : MonoBehaviour {
     public int nTilesX = 10;
     public int nTilesZ = 10;
     public float tileRadius = 1f;
-
+    public float heightFactor = 10f;
+    public float perlinFactor = 0.05f;
 
     // Temp mapgen dynamics variables
     public HexTile baseTile;
 
     // Internal variables
-    HexTile[,] tiles;
-    float[,] heightMap;
-    float[,] waterMap;
+    private HexTile[,] tiles;
+    public float[,] heightMap;
+    public float[,] waterMap;
 
     // Internal functions
     private void initTiles() {
@@ -25,21 +26,49 @@ public class MapGen : MonoBehaviour {
         linkTiles();
     }
     private void constructHeightMap() {
-        // TODO
+        heightMap = new float[nTilesX * 2 + 1, nTilesZ * 2];
+
+        // Generate Perlin noise using library functions
+        float xOffset = Random.value;
+        float yOffset = Random.value;
+        for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
+            for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
+                heightMap[x, y] = Mathf.PerlinNoise(perlinFactor * x + xOffset,
+                                                    perlinFactor * y + yOffset);
+            }
+        }
+
+        // Postprocess to make an interesting island
+            // TODO
     }
     private void constructWaterMap() {
+        waterMap = new float[nTilesX * 2 + 1, nTilesZ * 2];
+
         // TODO
+
+        // Temp: Generate randomly
+        int xOffset = Random.Range(0, 1000000);
+        int yOffset = Random.Range(0, 1000000);
+        for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
+            for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
+                waterMap[x, y] = Mathf.PerlinNoise(x + xOffset,
+                                                   y + yOffset);
+            }
+        }
     }
     private void constructTiles() {
+        GameObject tileParent = GameObject.Find("_Tiles");
         float xOffset = (3f / 2f) * tileRadius;
         float zOffset = Mathf.Sqrt(3f / 4f) * tileRadius;
         for (int x = 0 ; x < nTilesX ; x++) {
             for (int z = 0 ; z < nTilesZ ; z++) {
-                float height = 1f; // TODO
+                float height = heightMap[2 * x, 2 * z + (x % 2)];
                 Vector3 newLocation = new Vector3((float)x * xOffset,
-                                                  height,
+                                                  height * heightFactor,
                                                   ((2f * z) + (x % 2)) * zOffset);
                 tiles[x, z] = Instantiate(baseTile, newLocation, Quaternion.identity) as HexTile;
+                tiles[x, z].transform.parent = tileParent.transform;
+                tiles[x, z].gameObject.name = "Tile " + x + "," + z;
             }
         }
     }
