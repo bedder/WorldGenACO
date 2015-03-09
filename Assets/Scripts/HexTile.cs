@@ -148,8 +148,7 @@ public class HexTile : MonoBehaviour {
         return bounds.Length;
     }
     void setMaterial(Material newMaterial) {
-        foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
-            renderer.material = newMaterial;
+        transform.Find("Base").renderer.material = newMaterial;
     }
 
     // Unity logic functions
