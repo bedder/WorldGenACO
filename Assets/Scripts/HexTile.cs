@@ -19,7 +19,6 @@ public enum HexType {
 
 public class HexTile : MonoBehaviour {
     // Tile navigation
-    public Vector3 location;
     public HexTile[] neighbours;
     private bool passable;
 
@@ -48,11 +47,10 @@ public class HexTile : MonoBehaviour {
     }
 
     // Setters/modifiers
-    public void setType(Vector3 newLocation, HexTile[] newNeighbours, bool newPassable, float moisture) {
-        location = newLocation;
+    public void setType(HexTile[] newNeighbours, bool newPassable, float moisture) {
         neighbours = newNeighbours;
         passable = newPassable;
-        type = getTileType(location.y, moisture);
+        type = getTileType(gameObject.transform.position.y, moisture);
         // TODO
     }
     public void addPheromone(float newPheromone) {
