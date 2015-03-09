@@ -271,8 +271,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 701882462}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
+  m_LocalPosition: {x: 0, y: 100, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1096334743}
@@ -304,11 +304,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 413eff9be3951574787c234bb9362f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nTilesX: 30
-  nTilesZ: 30
+  nTilesX: 100
+  nTilesZ: 100
   tileRadius: 1
-  heightFactor: 3
-  perlinFactor: .200000003
+  heightFactor: 3.5
+  perlinFactor: .100000001
   baseTile: {fileID: 11400000, guid: d314826201170ec43a6226fd18dc4675, type: 2}
 --- !u!4 &897176851
 Transform:
@@ -406,8 +406,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1096334742}
-  m_LocalRotation: {x: .707106829, y: 0, z: 0, w: .707106829}
-  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 701882467}

@@ -2,19 +2,19 @@
 using System.Collections;
 
 public enum HexType {
-    TropicalForest0,
-    TropicalForest1,
-    Grassland,
-    SubtropicalDesert,
-    TemperateForest0,
-    TemperateForest1,
-    TemperateDesert,
-    Taiga,
-    Shrubland,
-    Snow,
-    Tundra,
-    Bare,
-    Scorched
+    TropicalForest0 = 0,
+    TropicalForest1 = 1,
+    Grassland = 2,
+    SubtropicalDesert = 3,
+    TemperateForest0 = 4,
+    TemperateForest1 = 5,
+    TemperateDesert = 6,
+    Taiga = 7,
+    Shrubland = 8,
+    Snow = 9,
+    Tundra = 10,
+    Bare = 11,
+    Scorched = 12
 }
 
 public class HexTile : MonoBehaviour {
@@ -24,13 +24,15 @@ public class HexTile : MonoBehaviour {
 
     // Tile qualities
     public HexType type;
+    public float moisture;
     private FoodSource foodSource;
     private Nest nest;
     private float pheromone;
 
     // Tile type definitions
-    private static float[] tileHeightBounds = { 0, 10, 20, 30 };
-    private static float[] tileMoistureBounds = { 10, 20, 30, 40, 50 };
+    public Material[] materials;
+    private static float[] tileHeightBounds = { 0, 0.75f, 1.50f, 2.25f };
+    private static float[] tileMoistureBounds = { 0.2f, 0.4f, 0.6f, 0.8f };
 
     // Trivial getters
     public bool isPassable() {
@@ -47,11 +49,13 @@ public class HexTile : MonoBehaviour {
     }
 
     // Setters/modifiers
-    public void setType(HexTile[] newNeighbours, bool newPassable, float moisture) {
+    public void setType(HexTile[] newNeighbours, bool newPassable, float newMoisture) {
         neighbours = newNeighbours;
         passable = newPassable;
-        type = getTileType(gameObject.transform.position.y, moisture);
-        // TODO
+        moisture = newMoisture;
+
+        type = getTileType(gameObject.transform.position.y);
+        setMaterial(materials[(int)type]);
     }
     public void addPheromone(float newPheromone) {
         pheromone += newPheromone;
@@ -72,7 +76,7 @@ public class HexTile : MonoBehaviour {
     }
 
     // Internal functions
-    HexType getTileType(float height, float moisture) {
+    HexType getTileType(float height) {
         int heightCategory = getTileCategory(height, tileHeightBounds);
         int moistureCategory = getTileCategory(moisture, tileMoistureBounds);
         switch (heightCategory) {
@@ -142,6 +146,10 @@ public class HexTile : MonoBehaviour {
                 return i - 1;
         }
         return bounds.Length;
+    }
+    void setMaterial(Material newMaterial) {
+        foreach (MeshRenderer renderer in GetComponentsInChildren<MeshRenderer>())
+            renderer.material = newMaterial;
     }
 
     // Unity logic functions

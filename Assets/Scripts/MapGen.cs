@@ -47,12 +47,12 @@ public class MapGen : MonoBehaviour {
         // TODO
 
         // Temp: Generate randomly
-        int xOffset = Random.Range(0, 1000000);
-        int yOffset = Random.Range(0, 1000000);
+        float xOffset = Random.value;
+        float yOffset = Random.value;
         for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
             for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
-                waterMap[x, y] = Mathf.PerlinNoise(x + xOffset,
-                                                   y + yOffset);
+                waterMap[x, y] = Mathf.PerlinNoise(perlinFactor * x + xOffset,
+                                                   perlinFactor * y + yOffset);
             }
         }
     }
@@ -71,6 +71,9 @@ public class MapGen : MonoBehaviour {
                 tiles[x, z].gameObject.name = "Tile " + x + "," + z;
             }
         }
+        // Recenter Tiles_ so we're constructing around the origin
+        Vector3 offset = tiles[tiles.GetLength(0) - 1, tiles.GetLength(1) - 1].transform.position - tiles[0, 0].transform.position;
+        GameObject.Find("_Tiles").transform.position -= (offset / 2);
     }
     private void linkTiles() {
         for (int z = 0 ; z < nTilesZ ; z++) {
@@ -87,7 +90,7 @@ public class MapGen : MonoBehaviour {
                                         (bottom ? null : tiles[x, z-1]),
                                         ((left || bottom) ? null : tiles[x-1, z-1]),
                                         (left ? null : tiles[x-1, z])};
-                float moisture = 10f; // TODO
+                float moisture = waterMap[2 * x, 2 * z + (x % 2)];
                 tiles[x, z].setType(neighbours, true, moisture);
             }
             for (int x = 1 ; x < nTilesX ; x += 2) {
@@ -99,7 +102,7 @@ public class MapGen : MonoBehaviour {
                                         (bottom ? null : tiles[x, z-1]),
                                         (left ? null : tiles[x-1, z]),
                                         ((top || left) ? null : tiles[x-1, z+1])};
-                float moisture = 10f; // TODO
+                float moisture = waterMap[2 * x, 2 * z + (x % 2)];
                 tiles[x, z].setType(neighbours, true, moisture);
             }
         }
