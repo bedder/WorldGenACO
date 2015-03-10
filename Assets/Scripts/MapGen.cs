@@ -17,24 +17,21 @@ public class MapGen : MonoBehaviour {
 
     // Internal variables
     private HexTile[,] tiles;
-    public float[,] heightMap;
-    public float[,] waterMap;
+    private float[,] heightMap;
+    private float[,] waterMap;
 
     // Internal functions
     private void initTiles() {
         tiles = new HexTile[nTilesX, nTilesZ];
-        constructHeightMap();
-        constructWaterMap();
+        int szX = nTilesX * 2 - 1;
+        int szY = nTilesZ * 2;
+        constructHeightMap(szX, szY);
+        constructWaterMap(szX, szY);
         constructTiles();
         linkTiles();
     }
-    private void constructHeightMap() {
-        int szX = nTilesX * 2 - 1;
-        int szY = nTilesZ * 2;
-
+    private void constructHeightMap(int szX, int szY) {
         heightMap = new float[szX, szY];
-
-        // Generate Perlin noise using library functions
         float xOffset = Random.value;
         float yOffset = Random.value;
         for (int x = 0 ; x < szX ; x++) {
@@ -43,16 +40,9 @@ public class MapGen : MonoBehaviour {
                                                               perlinFactor * y + yOffset), 2) + heightOffset;
             }
         }
-
-        // Postprocess to make an interesting island
-            // TODO
     }
-    private void constructWaterMap() {
-        int szX = nTilesX * 2 - 1;
-        int szY = nTilesZ * 2;
-
+    private void constructWaterMap(int szX, int szY) {
         waterMap = new float[szX, szY];
-
         // Generate distanceFromWater values
         int[,] distanceFromWater = new int[szX, szY];
         for (int x = 0 ; x < szX ; x++)
@@ -83,18 +73,15 @@ public class MapGen : MonoBehaviour {
                 }
             }
         }
-
         // Generate complete water map
         float xOffset = Random.value;
         float yOffset = Random.value;
         for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
             for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
                 float actualWater = distanceFromWaterFactor * (maxDistanceFromWater - distanceFromWater[x, y]) / maxDistanceFromWater;
-                float randomWater = 0.1f * Mathf.PerlinNoise(perlinFactor * x + xOffset,
-                                                             perlinFactor * y + yOffset);
+                float randomWater = 0.1f * Mathf.PerlinNoise(perlinFactor * x + xOffset, perlinFactor * y + yOffset);
                 waterMap[x, y] = actualWater + randomWater;
             }
-            Debug.Log("X: " + x + ", D: " + distanceFromWater[x, 0] + ", W:" + waterMap[x, 0]);
         }
     }
     private void constructTiles() {
