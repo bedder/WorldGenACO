@@ -15,6 +15,7 @@ public class HexTile : MonoBehaviour {
     private FoodSource foodSource;
     private Nest nest;
     private float pheromone = 0f;
+    private int visits = 0;
 
     // Tile type definitions
     public Material[] materials;
@@ -37,8 +38,14 @@ public class HexTile : MonoBehaviour {
     public float getPheromone() {
         return pheromone;
     }
+    public int getVisits() {
+        return visits;
+    }
 
     // Setters/modifiers
+    public void performVisit() {
+        visits++;
+    }
     public void setType(HexTile[] newNeighbours, bool newPassable, float newMoisture) {
         neighbours = newNeighbours;
         passable = newPassable;
