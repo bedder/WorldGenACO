@@ -352,7 +352,7 @@ MonoBehaviour:
   allowedExcessFood: 100
   timeBetweenAntSpawns: 5
   supportedAnts: 10
-  antPrefab: {fileID: 0}
+  antPrefab: {fileID: 100002, guid: 7103e7e5a9800ab4b9d0ec6413382601, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
