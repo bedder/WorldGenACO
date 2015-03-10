@@ -66,7 +66,7 @@ public class Helper {
                         return HexType.Snow;
                 }
             default:
-                return HexType.Bare;
+                return HexType.ERROR;
         }
     }
 };

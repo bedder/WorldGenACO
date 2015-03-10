@@ -59,7 +59,10 @@ public class HexTile : MonoBehaviour {
         type = Helper.getTileType(
             Helper.getCategory(height, tileHeightBounds),
             Helper.getCategory(moisture, tileMoistureBounds));
-        setMaterial(materials[(int)type]);
+        if (type == HexType.ERROR)
+            Destroy(gameObject);
+        else 
+            setMaterial(materials[(int)type]);
     }
 
     // Pheremone functions

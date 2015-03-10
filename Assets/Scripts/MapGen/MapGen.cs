@@ -107,6 +107,7 @@ public class MapGen : MonoBehaviour {
         }
         // Recenter Tiles_ so we're constructing around the origin
         Vector3 offset = tiles[tiles.GetLength(0) - 1, tiles.GetLength(1) - 1].transform.position - tiles[0, 0].transform.position;
+        offset.y = 0;  
         GameObject.Find("_Tiles").transform.position -= (offset / 2);
     }
     private void linkTiles() {
@@ -149,6 +150,7 @@ public class MapGen : MonoBehaviour {
     void addNest(HexTile tile) {
         Nest nest = Instantiate(nestTemplate, tile.transform.position, Quaternion.identity) as Nest;
         nest.transform.parent = tile.gameObject.transform;
+        nest.setLocation(tile);
         tile.findNest();
     }
     void assignFoodSourcesAndNests() {
