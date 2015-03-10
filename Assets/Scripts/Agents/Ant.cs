@@ -33,10 +33,10 @@ public class Ant : MonoBehaviour {
                     mode = AntMode.toNest;
                 } else if (shouldFollowPheremone()) {
                     previousLocations.Add(location);
-                    location = followPheremone();
+                    move(followPheremone());
                 } else {
                     previousLocations.Add(location);
-                    location = moveRandomly();
+                    move(moveRandomly());
                 }
                 break;
             case AntMode.toNest:
@@ -44,11 +44,12 @@ public class Ant : MonoBehaviour {
                     location.getNest().addFood(carrying);
                     carrying = 0;
                     mode = AntMode.foraging;
+                    return;
                 } else if (shouldFollowPheremone()) {
                     previousLocations.Clear();
-                    location = followPheremone();
+                    move(followPheremone());
                 } else {
-                    location = retraceSteps();
+                    move(retraceSteps());
                 }
                 location.addPheromone(pheremoneReleaseValue);
                 break;
@@ -107,10 +108,13 @@ public class Ant : MonoBehaviour {
         }
         return moveRandomly();
     }
+    private void move(HexTile tile) {
+        location = tile;
+        transform.position = location.transform.position;
+    }
 
     // Unity logic functions
-    void awake() {
-        location = null;
+    void Awake() {
         previousLocations = new List<HexTile>();
         mode = AntMode.foraging;
     }
