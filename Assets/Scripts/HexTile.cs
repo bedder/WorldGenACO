@@ -146,7 +146,7 @@ public class HexTile : MonoBehaviour {
     }
     int getTileCategory(float value, float[] bounds) {
         for (int i = 0 ; i < bounds.Length ; i++) {
-            if (value < bounds[i])
+            if (value <= bounds[i])
                 return i - 1;
         }
         return bounds.Length - 1;

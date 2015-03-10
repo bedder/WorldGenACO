@@ -155,7 +155,7 @@ public class MapGen : MonoBehaviour {
         int currentFoodSources = 0;
         while (currentFoodSources < nFoodSources) {
             HexTile tile = tiles[Random.Range(0, nTilesX - 1), Random.Range(0, nTilesZ - 1)];
-            if (tileRadius != null && !tile.isFoodSource() && !tile.isNest()) {
+            if (tile != null && !tile.isFoodSource() && !tile.isNest()) {
                 addFoodSource(tile);
                 currentFoodSources++;
             }
