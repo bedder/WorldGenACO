@@ -16,7 +16,7 @@ public class VisualisationController : MonoBehaviour {
     // Bounds
     public float maxHeight = 10f;
     public float maxPheremone = 10f;
-    public float maxFootfall = 10f;
+    public float maxVisits = 10f;
 
     // Visualisation colours
     private Color[] pheremoneColour = { new Color(1f, 1f, 1f, 1f), new Color(1f, 0f, 1f, 1f) };
@@ -35,7 +35,7 @@ public class VisualisationController : MonoBehaviour {
             if (tile != null) {
                 switch (mode) {
                     case VisualisationMode.footfall:
-                        tile.setVisualisationEnabled(false);
+                        tile.setVisualisationColor(interpolateColour(footfall, tile.getVisits() / maxVisits));
                        break;
                     case VisualisationMode.height:
                         tile.setVisualisationColor(interpolateColour(heightColour, tile.height / maxHeight));
