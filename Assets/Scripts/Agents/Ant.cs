@@ -16,8 +16,8 @@ public class Ant : MonoBehaviour {
 
     // Internal logic variables 
     private HexTile location;
-    private List<HexTile> previousLocations;
-    private AntMode mode;
+    public List<HexTile> previousLocations;
+    public AntMode mode;
 
     // Setters/modifiers
     public void setLocation(HexTile newLocation) {
@@ -31,12 +31,15 @@ public class Ant : MonoBehaviour {
                 if (carrying == 0 && location.isFoodSource()) {
                     carrying = location.getFoodSource().takeFood(burden);
                     mode = AntMode.toNest;
-                } else if (shouldFollowPheremone()) {
-                    previousLocations.Add(location);
-                    move(followPheremone());
                 } else {
                     previousLocations.Add(location);
-                    move(moveRandomly());
+                    if (adjacentFoodSource() != null) {
+                        move(adjacentFoodSource());
+                    } else if (shouldFollowPheremone()) {
+                        move(followPheremone());
+                    } else {
+                        move(moveRandomly());
+                    }
                 }
                 break;
             case AntMode.toNest:
@@ -45,6 +48,8 @@ public class Ant : MonoBehaviour {
                     carrying = 0;
                     mode = AntMode.foraging;
                     return;
+                } else if (adjacentNest() != null) {
+                    move(adjacentNest());
                 } else if (shouldFollowPheremone()) {
                     previousLocations.Clear();
                     move(followPheremone());
@@ -55,6 +60,18 @@ public class Ant : MonoBehaviour {
                 break;
         }
         location.addVisit();
+    }
+    public HexTile adjacentFoodSource() {
+        foreach (HexTile neighbour in location.neighbours)
+            if (neighbour != null && neighbour.isFoodSource())
+                return neighbour;
+        return null;
+    }
+    public HexTile adjacentNest() {
+        foreach (HexTile neighbour in location.neighbours)
+            if (neighbour != null && neighbour.isNest())
+                return neighbour;
+        return null;
     }
     public bool shouldFollowPheremone() {
         float pheremone = location.getPheromone();
@@ -103,9 +120,12 @@ public class Ant : MonoBehaviour {
         if (previousLocations.Count == 0)
             return moveRandomly();
         foreach (HexTile neighbour in location.neighbours) {
-            if (neighbour == previousLocations[previousLocations.Count - 1])
+            if (neighbour == previousLocations[previousLocations.Count - 1]) {
+                previousLocations.RemoveAt(previousLocations.Count - 1);
                 return neighbour;
+            }
         }
+        previousLocations.Clear();
         return moveRandomly();
     }
     private void move(HexTile tile) {

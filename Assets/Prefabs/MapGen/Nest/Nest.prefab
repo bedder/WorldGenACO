@@ -348,11 +348,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99b112ed564cf3246aa474b0f6a3cda6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  foodPerAntPerSecond: .100000001
+  foodPerAntPerTick: .100000001
+  initialFood: 300
   allowedExcessFood: 100
-  timeBetweenAntSpawns: 5
+  ticksBetweenAntSpawns: 5
   supportedAnts: 10
-  antPrefab: {fileID: 100002, guid: 7103e7e5a9800ab4b9d0ec6413382601, type: 2}
+  antPrefab: {fileID: 11400000, guid: 7103e7e5a9800ab4b9d0ec6413382601, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

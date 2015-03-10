@@ -15,6 +15,12 @@ public class AntController : MonoBehaviour {
         foreach (Ant ant in ants)
             ant.tick();
         nextTick = Time.realtimeSinceStartup + timeBetweenTicks;
+
+        HexTile[] tiles = GameObject.FindObjectsOfType<HexTile>();
+        foreach (HexTile tile in tiles) {
+            tile.diffusePheromone(0.25f);
+            tile.decayPheromone(0.9f);
+        }
     }
 
     void Awake() {

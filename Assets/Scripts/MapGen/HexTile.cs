@@ -95,10 +95,10 @@ public class HexTile : MonoBehaviour {
     }
     // Links
     public void findFoodSource() {
-        foodSource = GetComponent<FoodSource>();
+        foodSource = GetComponentInChildren<FoodSource>();
     }
     public void findNest() {
-        nest = GetComponent<Nest>();
+        nest = GetComponentInChildren<Nest>();
     }
     // Internal functions
     private void setMaterial(Material newMaterial) {
