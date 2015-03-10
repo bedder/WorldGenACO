@@ -1,21 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum HexType {
-    TropicalForest0 = 0,
-    TropicalForest1 = 1,
-    Grassland = 2,
-    SubtropicalDesert = 3,
-    TemperateForest0 = 4,
-    TemperateForest1 = 5,
-    TemperateDesert = 6,
-    Taiga = 7,
-    Shrubland = 8,
-    Snow = 9,
-    Tundra = 10,
-    Bare = 11,
-    Scorched = 12
-}
 
 public class HexTile : MonoBehaviour {
     // Tile navigation
@@ -26,9 +11,10 @@ public class HexTile : MonoBehaviour {
     public HexType type;
     public float moisture;
     public float height;
+
     private FoodSource foodSource;
     private Nest nest;
-    private float pheromone;
+    private float pheromone = 0f;
 
     // Tile type definitions
     public Material[] materials;
@@ -57,10 +43,13 @@ public class HexTile : MonoBehaviour {
         neighbours = newNeighbours;
         passable = newPassable;
         moisture = newMoisture;
-
-        type = getTileType(gameObject.transform.position.y);
+        type = Helper.getTileType(
+            Helper.getCategory(height, tileHeightBounds),
+            Helper.getCategory(moisture, tileMoistureBounds));
         setMaterial(materials[(int)type]);
     }
+
+    // Pheremone functions
     public void addPheromone(float newPheromone) {
         pheromone += newPheromone;
     }
@@ -78,83 +67,7 @@ public class HexTile : MonoBehaviour {
             if (neighbour != null)
                 neighbour.addPheromone(diffusedPheromone / nNeighbours);
     }
-
-    // Internal functions
-    HexType getTileType(float height) {
-        int heightCategory = getTileCategory(height, tileHeightBounds);
-        int moistureCategory = getTileCategory(moisture, tileMoistureBounds);
-        switch (heightCategory) {
-            case 0:
-                switch (moistureCategory) {
-                    case 0:
-                        return HexType.SubtropicalDesert;
-                    case 1:
-                        return HexType.Grassland;
-                    case 2:
-                    case 3:
-                        return HexType.TropicalForest1;
-                    case 4:
-                    case 5:
-                    default:
-                        return HexType.TropicalForest0;
-                }
-            case 1:
-                switch (moistureCategory) {
-                    case 0:
-                        return HexType.TemperateDesert;
-                    case 1:
-                    case 2:
-                        return HexType.Grassland;
-                    case 3:
-                    case 4:
-                        return HexType.TropicalForest1;
-                    case 5:
-                    default:
-                        return HexType.TropicalForest0;
-                }
-            case 2:
-                switch (moistureCategory) {
-                    case 0:
-                    case 1:
-                        return HexType.TemperateDesert;
-                    case 2:
-                    case 3:
-                        return HexType.Shrubland;
-                    case 4:
-                    case 5:
-                    default:
-                        return HexType.Taiga;
-                }
-            case 3:
-                switch (moistureCategory) {
-                    case 0:
-                        return HexType.Scorched;
-                    case 1:
-                        return HexType.Bare;
-                    case 2:
-                        return HexType.Tundra;
-                    case 3:
-                    case 4:
-                    case 5:
-                    default:
-                        return HexType.Snow;
-                }
-            default:
-                Destroy(gameObject);
-                return HexType.Bare;
-        }
-    }
-    int getTileCategory(float value, float[] bounds) {
-        for (int i = 0 ; i < bounds.Length ; i++) {
-            if (value <= bounds[i])
-                return i - 1;
-        }
-        return bounds.Length - 1;
-    }
-    void setMaterial(Material newMaterial) {
-        transform.Find("Base").renderer.material = newMaterial;
-    }
-
+    // Visualisation
     public void setVisualisationEnabled(bool enabled) {
         if (visualisationRenderer != null)
             visualisationRenderer.enabled = enabled;
@@ -164,17 +77,16 @@ public class HexTile : MonoBehaviour {
         if (visualisationRenderer != null)
             visualisationRenderer.material.color = newColour;
     }
+    // Links
     public void findFoodSource() {
         foodSource = GetComponent<FoodSource>();
     }
     public void findNest() {
         nest = GetComponent<Nest>();
     }
-
-    // Unity logic functions
-    void awake() {
-        pheromone = 0f;
-        nest = gameObject.GetComponent<Nest>();
-        foodSource = gameObject.GetComponent<FoodSource>();
+    // Internal functions
+    private void setMaterial(Material newMaterial) {
+        transform.Find("Base").renderer.material = newMaterial;
     }
+    
 }
