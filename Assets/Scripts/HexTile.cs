@@ -25,6 +25,7 @@ public class HexTile : MonoBehaviour {
     // Tile qualities
     public HexType type;
     public float moisture;
+    public float height;
     private FoodSource foodSource;
     private Nest nest;
     private float pheromone;
@@ -33,6 +34,9 @@ public class HexTile : MonoBehaviour {
     public Material[] materials;
     public float[] tileHeightBounds = { 0, 0.75f, 1.50f, 2.25f };
     public float[] tileMoistureBounds = { 0.2f, 0.4f, 0.6f, 0.8f };
+
+    // Visualisation parameters
+    public MeshRenderer visualisationRenderer;
 
     // Trivial getters
     public bool isPassable() {
@@ -136,7 +140,7 @@ public class HexTile : MonoBehaviour {
                         return HexType.Snow;
                 }
             default:
-                //Destroy(gameObject);
+                Destroy(gameObject);
                 return HexType.Bare;
         }
     }
@@ -149,6 +153,16 @@ public class HexTile : MonoBehaviour {
     }
     void setMaterial(Material newMaterial) {
         transform.Find("Base").renderer.material = newMaterial;
+    }
+
+    public void setVisualisationEnabled(bool enabled) {
+        if (visualisationRenderer != null)
+            visualisationRenderer.enabled = enabled;
+    }
+    public void setVisualisationColor(Color newColour) {
+        setVisualisationEnabled(true);
+        if (visualisationRenderer != null)
+            visualisationRenderer.material.color = newColour;
     }
 
     // Unity logic functions

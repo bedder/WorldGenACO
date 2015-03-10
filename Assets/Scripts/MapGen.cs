@@ -109,6 +109,7 @@ public class MapGen : MonoBehaviour {
                 tiles[x, z] = Instantiate(baseTile, newLocation, Quaternion.identity) as HexTile;
                 tiles[x, z].transform.parent = tileParent.transform;
                 tiles[x, z].gameObject.name = "Tile " + x + "," + z;
+                tiles[x, z].height = height;
             }
         }
         // Recenter Tiles_ so we're constructing around the origin

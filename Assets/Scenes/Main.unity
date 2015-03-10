@@ -390,15 +390,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 413eff9be3951574787c234bb9362f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nTilesX: 100
-  nTilesZ: 100
+  nTilesX: 10
+  nTilesZ: 10
   tileRadius: 1
   heightFactor: 8
   heightOffset: -.075000003
   perlinFactor: .0299999993
   distanceFromWaterFactor: 1
   maxDistanceFromWater: 30
-  baseTile: {fileID: 11400000, guid: d314826201170ec43a6226fd18dc4675, type: 2}
+  baseTile: {fileID: 11400000, guid: 97d0ff5ba632ca5438def11e3b6155bb, type: 2}
 --- !u!4 &897176851
 Transform:
   m_ObjectHideFlags: 0
@@ -423,6 +423,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
+  maxHeight: 10
+  maxPheremone: 10
+  maxFootfall: 10
 --- !u!1 &972295264
 GameObject:
   m_ObjectHideFlags: 0
