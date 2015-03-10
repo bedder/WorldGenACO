@@ -17,6 +17,8 @@ public class Ant : MonoBehaviour {
     // Internal logic variables 
     private HexTile location;
     public List<HexTile> previousLocations;
+    private bool currentlyWandering = false;
+    private int currentWanderDirection;
     public AntMode mode;
 
     // Setters/modifiers
@@ -30,6 +32,7 @@ public class Ant : MonoBehaviour {
             case AntMode.foraging:
                 if (carrying == 0 && location.isFoodSource()) {
                     carrying = location.getFoodSource().takeFood(burden);
+                    currentlyWandering = false;
                     mode = AntMode.toNest;
                 } else {
                     previousLocations.Add(location);
@@ -100,21 +103,34 @@ public class Ant : MonoBehaviour {
         return null;
     }
     private HexTile moveRandomly() {
-        if (previousLocations.Count == 0) {
-            // Move to any valid adjoining space
-            while (true) {
-                int i = Random.Range(0, 6);
-                if (location.neighbours[i] != null)
-                    return location.neighbours[i];
-            }
-        } else {
-            // Move to any valid adjoining space WITHOUT immediately backtracking
-            while (true) {
-                int i = Random.Range(0, 6);
-                if (location.neighbours[i] != null && location.neighbours[i] != previousLocations[previousLocations.Count - 1])
-                    return location.neighbours[i];
+        if (!currentlyWandering) {
+            currentWanderDirection = Random.Range(0, 5);
+            currentlyWandering = true;
+        }
+        HexTile directed = directedRandomMovement();
+        if (directed != null)
+            return directed;
+        while (true) {
+            int i = Random.Range(0, 6);
+            if (location.neighbours[i] != null && (previousLocations.Count == 0 || location.neighbours[i] != previousLocations[previousLocations.Count - 1])) {
+                currentWanderDirection = i;
+                return location.neighbours[i];
             }
         }
+    }
+    private HexTile directedRandomMovement() {
+        int[] dirs = {
+            ((currentWanderDirection + 5) % 6),
+            currentWanderDirection,
+            ((currentWanderDirection + 1) % 6) };
+        List<int> possibleDirections = new List<int>();
+        foreach (int dir in dirs)
+            if (location.neighbours[dir] != null)
+                possibleDirections.Add(dir);
+        if (possibleDirections.Count == 0)
+            return null;
+        currentWanderDirection = possibleDirections[Random.Range(0, possibleDirections.Count - 1)];
+        return location.neighbours[currentWanderDirection];
     }
     private HexTile retraceSteps() {
         if (previousLocations.Count == 0)
