@@ -4,18 +4,23 @@ using System.Collections.Generic;
 
 public enum AntMode {
     foraging,
-    toFood,
     toNest
 }
 
 public class Ant : MonoBehaviour {
+    // Behaviour variables
+    public float pheremoneFollowingConstant = 0.1f;
+    public float burden = 10f;
+    private float carrying = 0f;
+    public float pheremoneReleaseValue = 1f;
+
     // Internal logic variables 
     private HexTile location;
     private List<HexTile> previousLocations;
     private AntMode mode;
 
     // Setters/modifiers
-    void setLocation(HexTile newLocation) {
+    public void setLocation(HexTile newLocation) {
         location = newLocation;
     }
 
@@ -23,53 +28,84 @@ public class Ant : MonoBehaviour {
     public void tick() {
         switch (mode) {
             case AntMode.foraging:
-                if (followPheromone(location.getPheromone())) {
-                    previousLocations.RemoveRange(0, previousLocations.Count - 1);
-                    mode = AntMode.toFood;
+                if (carrying == 0 && location.isFoodSource()) {
+                    carrying = location.getFoodSource().takeFood(burden);
+                    mode = AntMode.toNest;
+                } else if (shouldFollowPheremone()) {
+                    previousLocations.Add(location);
+                    location = followPheremone();
                 } else {
-                    randomStep();
-                }
-                break;
-            case AntMode.toFood:
-                float highestPheromone = 0;
-                HexTile bestNeighbour = null;
-                foreach (HexTile neighbour in location.neighbours) {
-                    if (neighbour != null
-                            && neighbour.isPassable()
-                            && (location.isNest() || neighbour != previousLocations[0])
-                            && neighbour.getPheromone() > highestPheromone) {
-                        highestPheromone = neighbour.getPheromone();
-                        bestNeighbour = neighbour;
-                    }
-                }
-                if (bestNeighbour == null) {
-                    mode = AntMode.foraging;
-                    randomStep();
-                } else {
-                    previousLocations[0] = location;
-                    location = bestNeighbour;
+                    previousLocations.Add(location);
+                    location = moveRandomly();
                 }
                 break;
             case AntMode.toNest:
-                // TODO
+                if (location.isNest()) {
+                    location.getNest().addFood(carrying);
+                    carrying = 0;
+                    mode = AntMode.foraging;
+                } else if (shouldFollowPheremone()) {
+                    previousLocations.Clear();
+                    location = followPheremone();
+                } else {
+                    location = retraceSteps();
+                }
+                location.addPheromone(pheremoneReleaseValue);
                 break;
         }
+        location.addVisit();
     }
-    public bool followPheromone(float pheromone) {
-        // TODO
-        return true;
+    public bool shouldFollowPheremone() {
+        float pheremone = location.getPheromone();
+        float t = (pheremone + 6f) / pheremoneFollowingConstant;
+        float s = 1f / (1f + Mathf.Pow(2.71f, t));
+        return (Random.value < s);
     }
-    public void randomStep() {
-        while (true) {
-            int rnd = Random.Range(0, 6);
-            if (location.neighbours[rnd] != null
-                    && location.neighbours[rnd].isPassable()
-                    && location.neighbours[rnd] != previousLocations[previousLocations.Count - 1]) {
-                previousLocations.Add(location);
-                location = location.neighbours[rnd];
-                return;
+    private HexTile followPheremone() {
+        float[] pheremoneValues = { 0, 0, 0, 0, 0, 0 };
+        float totalPheremone = 0;
+        for (int dir = 0 ; dir < 6 ; dir++) {
+            // Sum neighbouring pheremone strengths
+            pheremoneValues[dir] = (location.neighbours[dir] == null ? 0 : location.neighbours[dir].getPheromone());
+            totalPheremone += pheremoneValues[dir];
+        }
+        if (totalPheremone < 0.1f)
+            return moveRandomly();
+        float randomNumber = Random.value;
+        float soFar = 0;
+        for (int dir = 0 ; dir < 6 ; dir++) {
+            // Select neighbour with probability proportional to the pheremone strength
+            soFar += pheremoneValues[dir];
+            if (location.neighbours[dir] != null && soFar > randomNumber)
+                return location.neighbours[dir];
+        }
+        return null;
+    }
+    private HexTile moveRandomly() {
+        if (previousLocations.Count == 0) {
+            // Move to any valid adjoining space
+            while (true) {
+                int i = Random.Range(0, 6);
+                if (location.neighbours[i] != null)
+                    return location.neighbours[i];
+            }
+        } else {
+            // Move to any valid adjoining space WITHOUT immediately backtracking
+            while (true) {
+                int i = Random.Range(0, 6);
+                if (location.neighbours[i] != null && location.neighbours[i] != previousLocations[previousLocations.Count - 1])
+                    return location.neighbours[i];
             }
         }
+    }
+    private HexTile retraceSteps() {
+        if (previousLocations.Count == 0)
+            return moveRandomly();
+        foreach (HexTile neighbour in location.neighbours) {
+            if (neighbour == previousLocations[previousLocations.Count - 1])
+                return neighbour;
+        }
+        return moveRandomly();
     }
 
     // Unity logic functions

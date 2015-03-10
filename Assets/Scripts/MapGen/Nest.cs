@@ -25,6 +25,7 @@ public class Nest : MonoBehaviour {
     }
     private void spawnAnt() {
         Ant newAnt = Instantiate(antPrefab) as Ant;
+        newAnt.setLocation(GetComponent<HexTile>());
         ants.Add(newAnt);
         nextAllowedAnt = Time.realtimeSinceStartup + timeBetweenAntSpawns;
     }

@@ -32,8 +32,14 @@ public class HexTile : MonoBehaviour {
     public bool isNest() {
         return (nest != null);
     }
+    public Nest getNest() {
+        return nest;
+    }
     public bool isFoodSource() {
         return (foodSource != null);
+    }
+    public FoodSource getFoodSource() {
+        return foodSource;
     }
     public float getPheromone() {
         return pheromone;
@@ -43,7 +49,7 @@ public class HexTile : MonoBehaviour {
     }
 
     // Setters/modifiers
-    public void performVisit() {
+    public void addVisit() {
         visits++;
     }
     public void setType(HexTile[] newNeighbours, bool newPassable, float newMoisture) {

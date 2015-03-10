@@ -18,7 +18,7 @@ public class FoodSource : MonoBehaviour {
         foodLevel *= restockRatePerSecond;
         nextRestock = Time.realtimeSinceStartup + 1f;
     }
-    private float takeFood(float requestedFood) {
+    public float takeFood(float requestedFood) {
         if (requestedFood < foodLevel) {
             foodLevel -= requestedFood;
             return requestedFood;
