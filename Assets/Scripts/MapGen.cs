@@ -89,11 +89,12 @@ public class MapGen : MonoBehaviour {
         float yOffset = Random.value;
         for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
             for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
-                float actualWater = distanceFromWaterFactor * (1 - (distanceFromWater[x, y] / maxDistanceFromWater));
-                float randomWater = 0.2f * Mathf.PerlinNoise(perlinFactor * x + xOffset,
+                float actualWater = distanceFromWaterFactor * (maxDistanceFromWater - distanceFromWater[x, y]) / maxDistanceFromWater;
+                float randomWater = 0.1f * Mathf.PerlinNoise(perlinFactor * x + xOffset,
                                                              perlinFactor * y + yOffset);
                 waterMap[x, y] = actualWater + randomWater;
             }
+            Debug.Log("X: " + x + ", D: " + distanceFromWater[x, 0] + ", W:" + waterMap[x, 0]);
         }
     }
     private void constructTiles() {

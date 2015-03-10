@@ -149,7 +149,7 @@ public class HexTile : MonoBehaviour {
             if (value < bounds[i])
                 return i - 1;
         }
-        return bounds.Length;
+        return bounds.Length - 1;
     }
     void setMaterial(Material newMaterial) {
         transform.Find("Base").renderer.material = newMaterial;

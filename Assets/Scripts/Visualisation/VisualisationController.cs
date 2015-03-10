@@ -20,7 +20,7 @@ public class VisualisationController : MonoBehaviour {
 
     // Visualisation colours
     private Color[] pheremoneColour = { new Color(1f, 1f, 1f, 1f), new Color(1f, 0f, 1f, 1f) };
-    private Color[] waterColour = { new Color(1f, 0f, 1f, 1f), new Color(0f, 0f, 1f, 1f) };
+    private Color[] waterColour = { new Color(1f, 0f, 0f, 1f), new Color(0f, 0f, 1f, 1f) };
     private Color[] heightColour = { new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f) };
     private Color[] footfall = { new Color(0f, 0f, 0f, 1f), new Color(1f, 1f, 1f, 1f) };
 
@@ -29,11 +29,13 @@ public class VisualisationController : MonoBehaviour {
         return Color.Lerp(colours[0], colours[1], amount);
     }
     private void setColour() {
+        if (mode == VisualisationMode.footfall)
+            Debug.Log("Footfall visualisation is not yet implemented");
         foreach (HexTile tile in tiles) {
             if (tile != null) {
                 switch (mode) {
                     case VisualisationMode.footfall:
-                       Debug.Log("Footfall visualisation not yet implemented");
+                        tile.setVisualisationEnabled(false);
                        break;
                     case VisualisationMode.height:
                         tile.setVisualisationColor(interpolateColour(heightColour, tile.height / maxHeight));

@@ -156,6 +156,7 @@ MonoBehaviour:
   neighbours: []
   type: 0
   moisture: 0
+  height: 0
   materials:
   - {fileID: 2100000, guid: 66faefdfd81541947ade7932f0cc4793, type: 2}
   - {fileID: 2100000, guid: 11745f805c9be454a9e62e9a0c3bf57e, type: 2}
@@ -172,9 +173,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: f37f7559923bb0249a966c260a090996, type: 2}
   tileHeightBounds:
   - 0
-  - .75
-  - 1.5
-  - 2.25
+  - 1
+  - 2
+  - 3.5
   tileMoistureBounds:
   - .200000003
   - .400000006

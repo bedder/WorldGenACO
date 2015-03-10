@@ -176,6 +176,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 16b3d067c2ff1cf4a886fcbabad018d0, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 16b3d067c2ff1cf4a886fcbabad018d0, type: 2}
   m_RootGameObject: {fileID: 1595315472}
@@ -390,14 +394,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 413eff9be3951574787c234bb9362f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nTilesX: 10
-  nTilesZ: 10
+  nTilesX: 100
+  nTilesZ: 100
   tileRadius: 1
-  heightFactor: 8
+  heightFactor: 10
   heightOffset: -.075000003
   perlinFactor: .0299999993
-  distanceFromWaterFactor: 1
-  maxDistanceFromWater: 30
+  distanceFromWaterFactor: .75
+  maxDistanceFromWater: 50
   baseTile: {fileID: 11400000, guid: 97d0ff5ba632ca5438def11e3b6155bb, type: 2}
 --- !u!4 &897176851
 Transform:
@@ -423,7 +427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  maxHeight: 10
+  tiles: []
+  maxHeight: .5
   maxPheremone: 10
   maxFootfall: 10
 --- !u!1 &972295264
