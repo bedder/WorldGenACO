@@ -11,9 +11,13 @@ public class MapGen : MonoBehaviour {
     public float perlinFactor = 0.05f;
     public float distanceFromWaterFactor = 0.1f;
     public int maxDistanceFromWater = 30;
+    public int nFoodSources = 5;
+    public int nNests = 1;
 
     // Temp mapgen dynamics variables
     public HexTile baseTile;
+    public FoodSource foodSourceTemplate;
+    public Nest nestTemplate;
 
     // Internal variables
     private HexTile[,] tiles;
@@ -29,6 +33,7 @@ public class MapGen : MonoBehaviour {
         constructWaterMap(szX, szY);
         constructTiles();
         linkTiles();
+        assignFoodSourcesAndNests();
     }
     private void constructHeightMap(int szX, int szY) {
         heightMap = new float[szX, szY];
@@ -133,6 +138,36 @@ public class MapGen : MonoBehaviour {
                                         ((top || left) ? null : tiles[x-1, z+1])};
                 float moisture = waterMap[2 * x, 2 * z + (x % 2)];
                 tiles[x, z].setType(neighbours, true, moisture);
+            }
+        }
+    }
+    void addFoodSource(HexTile tile) {
+        FoodSource foodSource = Instantiate(foodSourceTemplate, tile.transform.position, Quaternion.identity) as FoodSource;
+        foodSource.transform.parent = tile.gameObject.transform;
+        tile.findFoodSource();
+    }
+    void addNest(HexTile tile) {
+        Nest nest = Instantiate(nestTemplate, tile.transform.position, Quaternion.identity) as Nest;
+        nest.transform.parent = tile.gameObject.transform;
+        tile.findNest();
+    }
+    void assignFoodSourcesAndNests() {
+        int currentFoodSources = 0;
+        while (currentFoodSources < nFoodSources) {
+            HexTile tile = tiles[Random.Range(0, nTilesX - 1), Random.Range(0, nTilesZ - 1)];
+            if (tileRadius != null && !tile.isFoodSource() && !tile.isNest()) {
+                addFoodSource(tile);
+                currentFoodSources++;
+            }
+        }
+        int currentNests = 0;
+        while (currentNests < nNests) {
+            int x = Random.Range(0, nTilesX - 1);
+            int z = Random.Range(0, nTilesZ - 1);
+            HexTile tile = tiles[x, z];
+            if (tile != null && !tile.isFoodSource() && !tile.isNest()) {
+                addNest(tile);
+                currentNests++;
             }
         }
     }

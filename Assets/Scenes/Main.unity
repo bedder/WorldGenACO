@@ -394,15 +394,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 413eff9be3951574787c234bb9362f49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nTilesX: 100
-  nTilesZ: 100
+  nTilesX: 150
+  nTilesZ: 60
   tileRadius: 1
   heightFactor: 10
   heightOffset: -.075000003
   perlinFactor: .0299999993
   distanceFromWaterFactor: .75
   maxDistanceFromWater: 50
+  nFoodSources: 5
+  nNests: 1
   baseTile: {fileID: 11400000, guid: 97d0ff5ba632ca5438def11e3b6155bb, type: 2}
+  foodSourceTemplate: {fileID: 11400000, guid: 542e603d291a8be45b91764b1b2e6a2d, type: 2}
+  nestTemplate: {fileID: 11400000, guid: 70c9602e98c0cfa4b85c16f22b74783c, type: 2}
 --- !u!4 &897176851
 Transform:
   m_ObjectHideFlags: 0

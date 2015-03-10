@@ -164,6 +164,12 @@ public class HexTile : MonoBehaviour {
         if (visualisationRenderer != null)
             visualisationRenderer.material.color = newColour;
     }
+    public void findFoodSource() {
+        foodSource = GetComponent<FoodSource>();
+    }
+    public void findNest() {
+        nest = GetComponent<Nest>();
+    }
 
     // Unity logic functions
     void awake() {
