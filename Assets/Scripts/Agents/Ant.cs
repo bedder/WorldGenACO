@@ -153,8 +153,9 @@ public class Ant : MonoBehaviour {
                 return neighbour;
             }
         }
-        Debug.Log(location.name + " IS NOT ADJACENT TO " + previousLocations[previousLocations.Count - 1].name);
+        Debug.Log("An ant has gotten lost!");
         previousLocations.Clear();
+        carrying = 0f;
         return moveRandomly();
     }
     private void rememberLocation() {
