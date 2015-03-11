@@ -105,7 +105,7 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_Strength: 1
     m_Bias: .0500000007
@@ -401,11 +401,11 @@ MonoBehaviour:
   heightFactor: 10
   heightOffset: -.075000003
   perlinFactor: .0299999993
-  distanceFromWaterFactor: .75
-  maxDistanceFromWater: 50
+  distanceFromWaterFactor: .899999976
+  maxDistanceFromWater: 30
   nFoodSources: 20
   nNests: 5
-  baseTile: {fileID: 11400000, guid: 97d0ff5ba632ca5438def11e3b6155bb, type: 2}
+  baseTile: {fileID: 11400000, guid: fe176e6b18199b3478983b428849ab1c, type: 2}
   foodSourceTemplate: {fileID: 11400000, guid: 542e603d291a8be45b91764b1b2e6a2d, type: 2}
   nestTemplate: {fileID: 11400000, guid: 70c9602e98c0cfa4b85c16f22b74783c, type: 2}
 --- !u!4 &897176851
@@ -436,6 +436,7 @@ MonoBehaviour:
   maxHeight: .5
   maxPheremone: 10
   maxVisits: 10
+  boundsUpdateFrequency: 5
 --- !u!114 &897176853
 MonoBehaviour:
   m_ObjectHideFlags: 0

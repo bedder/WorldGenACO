@@ -4,10 +4,23 @@ ModelImporter:
   serializedVersion: 16
   fileIDToRecycleName:
     100000: //RootNode
+    100002: pCone1
+    100004: pCylinder1
+    100006: pCylinder2
+    100008: transform1
+    100010: transform2
     400000: //RootNode
+    400002: pCone1
+    400004: pCylinder1
+    400006: pCylinder2
+    400008: transform1
+    400010: transform2
     2300000: //RootNode
+    2300002: pCylinder2
     3300000: //RootNode
+    3300002: pCylinder2
     4300000: pCylinder1
+    4300002: pCylinder2
     9500000: //RootNode
   materials:
     importMaterials: 1
