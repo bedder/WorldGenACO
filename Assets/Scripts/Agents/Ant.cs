@@ -40,7 +40,7 @@ public class Ant : MonoBehaviour {
                     currentlyWandering = false;
                     mode = AntMode.toNest;
                 } else {
-                    previousLocations.Add(location);
+                    rememberLocation();
                     HexTile food = adjacentFoodSource();
                     if (food != null) {
                         move(food);
@@ -156,6 +156,12 @@ public class Ant : MonoBehaviour {
         Debug.Log(location.name + " IS NOT ADJACENT TO " + previousLocations[previousLocations.Count - 1].name);
         previousLocations.Clear();
         return moveRandomly();
+    }
+    private void rememberLocation() {
+        int lastIndex = previousLocations.FindIndex(tile => (tile == location));
+        if (lastIndex != -1 && lastIndex != previousLocations.Count - 1)
+            previousLocations.RemoveRange(lastIndex + 1, previousLocations.Count - lastIndex - 2);
+        previousLocations.Add(location);
     }
     private void move(HexTile tile) {
         if (location == null) {
