@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 794e43810a8d8c44b84551687916c609, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pheremoneFollowingConstant: .100000001
+  pheremoneFollowingConstant: 1
   burden: 10
   pheremoneReleaseValue: 100
   previousLocations: []

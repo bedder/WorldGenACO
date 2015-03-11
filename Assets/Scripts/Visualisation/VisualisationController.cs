@@ -29,8 +29,6 @@ public class VisualisationController : MonoBehaviour {
         return Color.Lerp(colours[0], colours[1], amount);
     }
     private void setColour() {
-        if (mode == VisualisationMode.footfall)
-            Debug.Log("Footfall visualisation is not yet implemented");
         foreach (HexTile tile in tiles) {
             if (tile != null) {
                 switch (mode) {

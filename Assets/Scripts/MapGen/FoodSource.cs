@@ -3,20 +3,22 @@ using System.Collections;
 
 public class FoodSource : MonoBehaviour {
     // Food source dynamics variables
-    public float restockRatePerSecond = 1.1f;
+    public int restockFrequency = 100;
+    public float restockPerTick = 1.5f;
     public float initFoodLevel = 200f;
     public float maxFood = 250f;
+    public float pheremonePerStep = 10f;
 
     // Internal variables
     private float foodLevel;
-    private float nextRestock;
+    private int nextRestock;
+    private HexTile location;
 
     // Internal functions
     private void restock() {
         if (foodLevel < 1)
             foodLevel = 1;
-        foodLevel *= restockRatePerSecond;
-        nextRestock = Time.realtimeSinceStartup + 1f;
+        foodLevel *= restockPerTick;
     }
     public float takeFood(float requestedFood) {
         if (requestedFood < foodLevel) {
@@ -29,13 +31,21 @@ public class FoodSource : MonoBehaviour {
         }
     }
 
+    public void tick() {
+        if (location == null)
+            location = gameObject.GetComponentInParent<HexTile>();
+        else
+            location.addPheromone(0 * pheremonePerStep);
+        nextRestock--;
+        if (nextRestock < 1) {
+            restock();
+            nextRestock = restockFrequency;
+        }
+    }
+
     // Unity logic functions
     void awake() {
         foodLevel = initFoodLevel;
-        nextRestock = 0f;
-    }
-    void update() {
-        if (Time.realtimeSinceStartup > nextRestock)
-            restock();
+        nextRestock = 0;
     }
 }

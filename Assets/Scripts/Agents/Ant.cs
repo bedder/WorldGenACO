@@ -4,15 +4,18 @@ using System.Collections.Generic;
 
 public enum AntMode {
     foraging,
+    following,
     toNest
 }
 
 public class Ant : MonoBehaviour {
     // Behaviour variables
-    public float pheremoneFollowingConstant = 0.1f;
     public float burden = 10f;
     private float carrying = 0f;
     public float pheremoneReleaseValue = 1f;
+    public float pheremoneCaptureFactor = 1f;
+    public float pheremoneFollowingFactor = 2f;
+    public float terrainFollowingFactor = 1f;
 
     // Internal logic variables 
     private HexTile location;
@@ -30,17 +33,22 @@ public class Ant : MonoBehaviour {
     public void tick() {
         switch (mode) {
             case AntMode.foraging:
+            case AntMode.following:
                 if (carrying == 0 && location.isFoodSource()) {
                     carrying = location.getFoodSource().takeFood(burden);
+                    location.addPheromone(10f * pheremoneReleaseValue * (carrying / burden));
                     currentlyWandering = false;
                     mode = AntMode.toNest;
                 } else {
                     previousLocations.Add(location);
-                    if (adjacentFoodSource() != null) {
-                        move(adjacentFoodSource());
+                    HexTile food = adjacentFoodSource();
+                    if (food != null) {
+                        move(food);
                     } else if (shouldFollowPheremone()) {
+                        mode = AntMode.following;
                         move(followPheremone());
                     } else {
+                        mode = AntMode.foraging;
                         move(moveRandomly());
                     }
                 }
@@ -53,9 +61,6 @@ public class Ant : MonoBehaviour {
                     return;
                 } else if (adjacentNest() != null) {
                     move(adjacentNest());
-                } else if (shouldFollowPheremone()) {
-                    previousLocations.Clear();
-                    move(followPheremone());
                 } else {
                     move(retraceSteps());
                 }
@@ -78,27 +83,33 @@ public class Ant : MonoBehaviour {
     }
     public bool shouldFollowPheremone() {
         float pheremone = location.getPheromone();
-        float t = (pheremone + 6f) / pheremoneFollowingConstant;
+        float t = pheremone * pheremoneCaptureFactor - pheremoneReleaseValue;
         float s = 1f / (1f + Mathf.Pow(2.71f, t));
         return (Random.value < s);
     }
     private HexTile followPheremone() {
-        float[] pheremoneValues = { 0, 0, 0, 0, 0, 0 };
-        float totalPheremone = 0;
-        for (int dir = 0 ; dir < 6 ; dir++) {
-            // Sum neighbouring pheremone strengths
-            pheremoneValues[dir] = (location.neighbours[dir] == null ? 0 : location.neighbours[dir].getPheromone());
-            totalPheremone += pheremoneValues[dir];
+        int[] directions = { (currentWanderDirection + 5) % 6,
+                             currentWanderDirection,
+                             (currentWanderDirection + 1) % 6 };
+        float[] motivation = { 0, 0, 0, 0, 0, 0};
+        float totalMotivation = 0;
+        foreach (int dir in directions) {
+            if (dir != currentWanderDirection && location.neighbours[dir] != null) {
+                motivation[dir] += Mathf.Pow(location.neighbours[dir].getPheromone(), pheremoneFollowingFactor);
+                motivation[dir] += Mathf.Pow(location.height - location.neighbours[dir].height, terrainFollowingFactor);
+                totalMotivation += motivation[dir];
+            }
         }
-        if (totalPheremone < 0.1f)
+        if (totalMotivation < 0.1f)
             return moveRandomly();
-        float randomNumber = Random.value;
+        float randomNumber = Random.value * totalMotivation;
         float soFar = 0;
-        for (int dir = 0 ; dir < 6 ; dir++) {
-            // Select neighbour with probability proportional to the pheremone strength
-            soFar += pheremoneValues[dir];
-            if (location.neighbours[dir] != null && soFar > randomNumber)
+        foreach (int dir in directions) {
+            soFar += motivation[dir];
+            if (soFar > randomNumber) {
+                currentWanderDirection = dir;
                 return location.neighbours[dir];
+            }
         }
         return null;
     }
@@ -121,7 +132,8 @@ public class Ant : MonoBehaviour {
     private HexTile directedRandomMovement() {
         int[] dirs = {
             ((currentWanderDirection + 5) % 6),
-            currentWanderDirection,
+            currentWanderDirection, currentWanderDirection, currentWanderDirection,
+            currentWanderDirection, currentWanderDirection, currentWanderDirection,
             ((currentWanderDirection + 1) % 6) };
         List<int> possibleDirections = new List<int>();
         foreach (int dir in dirs)
@@ -141,10 +153,15 @@ public class Ant : MonoBehaviour {
                 return neighbour;
             }
         }
+        Debug.Log(location.name + " IS NOT ADJACENT TO " + previousLocations[previousLocations.Count - 1].name);
         previousLocations.Clear();
         return moveRandomly();
     }
     private void move(HexTile tile) {
+        if (location == null) {
+            Debug.Log("Trying to move to a null location!");
+            return;
+        }
         location = tile;
         transform.position = location.transform.position;
     }

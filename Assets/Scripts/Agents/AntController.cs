@@ -3,6 +3,8 @@ using System.Collections;
 
 public class AntController : MonoBehaviour {
     public float timeBetweenTicks = 0.5f;
+    public float diffusionFactor = 0.2f;
+    public float decayFactor = 0.9f;
     private float nextTick;
     private bool isPaused;
 
@@ -11,6 +13,10 @@ public class AntController : MonoBehaviour {
         foreach (Nest nest in nests)
             nest.tick();
 
+        FoodSource[] foodSources = GameObject.FindObjectsOfType<FoodSource>();
+        foreach (FoodSource foodSource in foodSources)
+            foodSource.tick();
+
         Ant[] ants = GameObject.FindObjectsOfType<Ant>();
         foreach (Ant ant in ants)
             ant.tick();
@@ -18,8 +24,8 @@ public class AntController : MonoBehaviour {
 
         HexTile[] tiles = GameObject.FindObjectsOfType<HexTile>();
         foreach (HexTile tile in tiles) {
-            tile.diffusePheromone(0.25f);
-            tile.decayPheromone(0.9f);
+            tile.diffusePheromone(diffusionFactor);
+            tile.decayPheromone(decayFactor);
         }
     }
 

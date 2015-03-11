@@ -30,10 +30,7 @@ public class Nest : MonoBehaviour {
         food += newFood;
     }
     private void spawnAnt() {
-        Debug.Log("Spawning ant");
         Ant newAnt = Instantiate(antPrefab, location.transform.position, Quaternion.identity) as Ant;
-        Debug.Log(newAnt);
-        Debug.Log(location);
         newAnt.setLocation(location);
         newAnt.transform.parent = transform.parent;
         ants.Add(newAnt);
