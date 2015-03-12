@@ -7,7 +7,6 @@ public class FoodSource : MonoBehaviour {
     public float restockPerTick = 1.5f;
     public float initFoodLevel = 200f;
     public float maxFood = 250f;
-    public float pheremonePerStep = 10f;
 
     // Internal variables
     private float foodLevel;
@@ -34,8 +33,6 @@ public class FoodSource : MonoBehaviour {
     public void tick() {
         if (location == null)
             location = gameObject.GetComponentInParent<HexTile>();
-        else
-            location.addPheromone(0 * pheremonePerStep);
         nextRestock--;
         if (nextRestock < 1) {
             restock();
