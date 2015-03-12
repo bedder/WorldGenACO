@@ -20,8 +20,6 @@ public class Nest : MonoBehaviour {
     private int currentTick = 0;
     private HexTile location;
 
-    // Trivial Getters
-
     // Setters/modifiers
     public void setLocation(HexTile newLocation) {
         location = newLocation;
@@ -36,7 +34,6 @@ public class Nest : MonoBehaviour {
         ants.Add(newAnt);
         nextAllowedAnt = currentTick + antSpawnFrequency;
     }
-
     public void tick() {
         // Update food levels
         food -= foodPerAnt * ants.Count;
@@ -58,7 +55,6 @@ public class Nest : MonoBehaviour {
             maxAnts = settings.maxAnts;
             antSpawnFrequency = settings.antSpawnFrequency;
         }
-
         ants = new List<Ant>();
         food = initialFood;
         location = gameObject.GetComponent<HexTile>();

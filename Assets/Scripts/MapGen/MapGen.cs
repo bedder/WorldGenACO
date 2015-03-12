@@ -42,7 +42,6 @@ public class MapGen : MonoBehaviour {
         for (int x = 0 ; x < szX ; x++) {
             for (int y = 0 ; y < szY ; y++) {
                 heightMap[x, y] = Mathf.Pow(Mathf.PerlinNoise(perlinFactor * x + xOffset,
-                                                              perlinFactor * y + yOffset), 2) + heightOffset;
             }
         }
     }

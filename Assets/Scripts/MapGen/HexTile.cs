@@ -104,5 +104,4 @@ public class HexTile : MonoBehaviour {
     private void setMaterial(Material newMaterial) {
         transform.Find("Base").renderer.material = newMaterial;
     }
-    
 }

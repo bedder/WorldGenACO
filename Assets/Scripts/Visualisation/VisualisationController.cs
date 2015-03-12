@@ -3,7 +3,7 @@ using System.Collections;
 
 public enum VisualisationMode {
     none,
-    footfall,
+    visits,
     height,
     pheremone,
     water
@@ -16,7 +16,7 @@ public class VisualisationController : MonoBehaviour {
     // Bounds
     public float maxHeight = 10f;
     public float maxPheremone = 10f;
-    public int maxVisits = 10;
+    public float maxLogVisits = 1;
     public float boundsUpdateFrequency = 5f;
     private float nextBoundsUpdate = 0f;
 
@@ -24,7 +24,7 @@ public class VisualisationController : MonoBehaviour {
     private Color[] pheremoneColour = { new Color(1f, 1f, 1f, 1f), new Color(1f, 0f, 1f, 1f) };
     private Color[] waterColour = { new Color(1f, 0f, 1f, 1f), new Color(0f, 0f, 1f, 1f) };
     private Color[] heightColour = { new Color(1f, 1f, 0f, 1f), new Color(1f, 0f, 0f, 1f) };
-    private Color[] footfall = { new Color(0f, 0f, 0f, 1f), new Color(1f, 1f, 1f, 1f) };
+    private Color[] visits = { new Color(0f, 0f, 0f, 1f), new Color(1f, 1f, 1f, 1f) };
 
     // Internal logic functions
     private Color interpolateColour(Color[] colours, float amount) {
@@ -34,8 +34,8 @@ public class VisualisationController : MonoBehaviour {
         foreach (HexTile tile in tiles) {
             if (tile != null) {
                 switch (mode) {
-                    case VisualisationMode.footfall:
-                        tile.setVisualisationColor(interpolateColour(footfall, (float)tile.getVisits() / maxVisits));
+                    case VisualisationMode.visits:
+                        tile.setVisualisationColor(interpolateColour(visits, Mathf.Log(tile.getVisits()) / maxLogVisits));
                        break;
                     case VisualisationMode.height:
                         tile.setVisualisationColor(interpolateColour(heightColour, tile.height / maxHeight));
@@ -56,7 +56,7 @@ public class VisualisationController : MonoBehaviour {
     private void updateBounds() {
         foreach (HexTile tile in FindObjectsOfType<HexTile>())
             if (!tile.isFoodSource() && !tile.isNest())
-                maxVisits = Mathf.Max(maxVisits, tile.getVisits());
+                maxLogVisits = Mathf.Max(maxLogVisits, Mathf.Log(tile.getVisits()));
         nextBoundsUpdate = Time.realtimeSinceStartup + boundsUpdateFrequency;
     }
 
@@ -70,8 +70,8 @@ public class VisualisationController : MonoBehaviour {
     void Update() {
         if (nextBoundsUpdate < Time.realtimeSinceStartup)
             updateBounds();
-        if (Input.GetButtonDown("VisualisationFootfall")) {
-            mode = (mode == VisualisationMode.footfall ? VisualisationMode.none : VisualisationMode.footfall);
+        if (Input.GetButtonDown("Visualisationvisits")) {
+            mode = (mode == VisualisationMode.visits ? VisualisationMode.none : VisualisationMode.visits);
         } else if (Input.GetButtonDown("VisualisationHeight")) {
             mode = (mode == VisualisationMode.height ? VisualisationMode.none : VisualisationMode.height);
         } else if (Input.GetButtonDown("VisualisationPheremone")) {

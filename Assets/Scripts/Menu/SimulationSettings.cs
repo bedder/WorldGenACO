@@ -28,7 +28,7 @@ public class SimulationSettings : MonoBehaviour {
     public float pheremoneDiffusion = 0.1f;
     public float pheremoneDecay = 0.95f;
 
-
+    // Unity logic functions
     void Awake() {
         DontDestroyOnLoad(gameObject);
     }

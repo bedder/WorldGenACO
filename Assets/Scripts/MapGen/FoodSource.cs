@@ -4,7 +4,7 @@ using System.Collections;
 public class FoodSource : MonoBehaviour {
     // Food source dynamics variables
     public int restockFrequency = 100;
-    public float restockPerTick = 1.5f;
+    public float restockFactor = 1.5f;
     public float initFoodLevel = 200f;
     public float maxFood = 250f;
 
@@ -17,7 +17,7 @@ public class FoodSource : MonoBehaviour {
     private void restock() {
         if (foodLevel < 1)
             foodLevel = 1;
-        foodLevel *= restockPerTick;
+        foodLevel *= restockFactor;
     }
     public float takeFood(float requestedFood) {
         if (requestedFood < foodLevel) {
@@ -30,7 +30,6 @@ public class FoodSource : MonoBehaviour {
             return remainingFood;
         }
     }
-
     public void tick() {
         if (location == null)
             location = gameObject.GetComponentInParent<HexTile>();
@@ -46,7 +45,7 @@ public class FoodSource : MonoBehaviour {
         SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
         if (settings != null) {
             restockFrequency = settings.restockFrequency;
-            restockPerTick = settings.restockFactor;
+            restockFactor = settings.restockFactor;
         }
         foodLevel = initFoodLevel;
         nextRestock = 0;

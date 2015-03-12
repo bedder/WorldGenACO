@@ -12,10 +12,10 @@ public class Ant : MonoBehaviour {
     // Behaviour variables
     public float burden = 10f;
     private float carrying = 0f;
-    public float pheremoneReleaseValue = 100f;
-    public float pheremoneCaptureFactor = 1f;
-    public float pheremoneFollowingFactor = 2f;
-    public float terrainFollowingFactor = 1f;
+    public float pheremoneRelease = 100f;
+    public float pheremoneAttraction = 1f;
+    public float pheremoneFollowing = 2f;
+    public float terrainFollowing = 1f;
 
     // Internal logic variables 
     private HexTile location;
@@ -36,7 +36,7 @@ public class Ant : MonoBehaviour {
             case AntMode.following:
                 if (carrying == 0 && location.isFoodSource()) {
                     carrying = location.getFoodSource().takeFood(burden);
-                    location.addPheromone(10f * pheremoneReleaseValue * (carrying / burden));
+                    location.addPheromone(10f * pheremoneRelease * (carrying / burden));
                     currentlyWandering = false;
                     mode = AntMode.toNest;
                 } else {
@@ -64,7 +64,7 @@ public class Ant : MonoBehaviour {
                 } else {
                     move(retraceSteps());
                 }
-                location.addPheromone(pheremoneReleaseValue);
+                location.addPheromone(pheremoneRelease);
                 break;
         }
         location.addVisit();
@@ -83,7 +83,7 @@ public class Ant : MonoBehaviour {
     }
     public bool shouldFollowPheremone() {
         float pheremone = location.getPheromone();
-        float t = pheremone * pheremoneCaptureFactor - pheremoneReleaseValue;
+        float t = pheremone * pheremoneAttraction - pheremoneRelease;
         float s = 1f / (1f + Mathf.Pow(2.71f, t));
         return (Random.value < s);
     }
@@ -95,8 +95,8 @@ public class Ant : MonoBehaviour {
         float totalMotivation = 0;
         foreach (int dir in directions) {
             if (dir != currentWanderDirection && location.neighbours[dir] != null) {
-                motivation[dir] += Mathf.Pow(location.neighbours[dir].getPheromone(), pheremoneFollowingFactor);
-                motivation[dir] += Mathf.Pow(location.height - location.neighbours[dir].height, terrainFollowingFactor);
+                motivation[dir] += Mathf.Pow(location.neighbours[dir].getPheromone(), pheremoneFollowing);
+                motivation[dir] += Mathf.Pow(location.height - location.neighbours[dir].height, terrainFollowing);
                 totalMotivation += motivation[dir];
             }
         }
@@ -177,12 +177,11 @@ public class Ant : MonoBehaviour {
     void Awake() {
         SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
         if (settings != null) {
-            pheremoneReleaseValue = settings.pheremoneRelease;
-            pheremoneCaptureFactor = settings.pheremoneAttraction;
-            pheremoneFollowingFactor = settings.pheremoneFollowing;
-            terrainFollowingFactor = settings.terrainFollowing;
+            pheremoneRelease = settings.pheremoneRelease;
+            pheremoneAttraction = settings.pheremoneAttraction;
+            pheremoneFollowing = settings.pheremoneFollowing;
+            terrainFollowing = settings.terrainFollowing;
         }
-
         previousLocations = new List<HexTile>();
         mode = AntMode.foraging;
     }
