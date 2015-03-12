@@ -25,8 +25,8 @@ public class MenuBehaviour : MonoBehaviour {
             settings.pheremoneAttraction = sliderValue("PheremoneAttractionCapture");
             settings.pheremoneFollowing = sliderValue("AntPheremoneFollowing");
             settings.terrainFollowing = sliderValue("AntTerrainFollowing");
-            //settings.pheremoneDecay = sliderValue("PheremoneDecay");
-            //settings.pheremoneDiffusion = sliderValue("PheremoneDiffusion");
+            settings.pheremoneDecay = sliderValue("PheremoneDecay");
+            settings.pheremoneDiffusion = sliderValue("PheremoneDiffusion");
         }
         Application.LoadLevel(1);
     }
