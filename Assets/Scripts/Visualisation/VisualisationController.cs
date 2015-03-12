@@ -70,7 +70,7 @@ public class VisualisationController : MonoBehaviour {
     void Update() {
         if (nextBoundsUpdate < Time.realtimeSinceStartup)
             updateBounds();
-        if (Input.GetButtonDown("Visualisationvisits")) {
+        if (Input.GetButtonDown("VisualisationFootfall")) {
             mode = (mode == VisualisationMode.visits ? VisualisationMode.none : VisualisationMode.visits);
         } else if (Input.GetButtonDown("VisualisationHeight")) {
             mode = (mode == VisualisationMode.height ? VisualisationMode.none : VisualisationMode.height);

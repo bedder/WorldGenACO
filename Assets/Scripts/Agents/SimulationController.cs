@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class AntController : MonoBehaviour {
+public class SimulationController : MonoBehaviour {
     public float timeBetweenTicks = 0f;
     public float diffusionFactor = 0.1f;
     public float decayFactor = 0.95f;
