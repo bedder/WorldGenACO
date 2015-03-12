@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class AntController : MonoBehaviour {
@@ -7,6 +8,7 @@ public class AntController : MonoBehaviour {
     public float decayFactor = 0.95f;
     private float nextTick;
     private bool isPaused;
+    public Canvas pauseMenu;
 
     private void tick() {
         Nest[] nests = GameObject.FindObjectsOfType<Nest>();
@@ -43,8 +45,17 @@ public class AntController : MonoBehaviour {
     void Update() {
         if (Input.GetButtonDown("Pause")) {
             isPaused =! isPaused;
+            if (pauseMenu != null)
+                pauseMenu.enabled = isPaused;
             if (isPaused)
                 nextTick = Time.realtimeSinceStartup + timeBetweenTicks;
+        }
+        if (isPaused && Input.GetButtonDown("Quit")) {
+            // Delete the SimulationSettings first, then load the menu
+            SimulationSettings settings = FindObjectOfType<SimulationSettings>();
+            if (settings != null)
+                Destroy(settings.gameObject);
+            Application.LoadLevel(0);
         }
 
         if ((!isPaused && nextTick < Time.realtimeSinceStartup) ||
