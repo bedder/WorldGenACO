@@ -11,7 +11,6 @@ public class HexTile : MonoBehaviour {
     public HexType type;
     public float moisture;
     public float height;
-
     private FoodSource foodSource;
     private Nest nest;
     private float pheromone = 0f;
