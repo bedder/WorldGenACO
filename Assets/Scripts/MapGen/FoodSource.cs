@@ -26,6 +26,7 @@ public class FoodSource : MonoBehaviour {
         } else {
             float remainingFood = foodLevel;
             foodLevel = 0;
+            Destroy(gameObject);
             return remainingFood;
         }
     }
@@ -41,13 +42,12 @@ public class FoodSource : MonoBehaviour {
     }
 
     // Unity logic functions
-    void awake() {
+    void Awake() {
         SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
         if (settings != null) {
             restockFrequency = settings.restockFrequency;
             restockPerTick = settings.restockFactor;
         }
-
         foodLevel = initFoodLevel;
         nextRestock = 0;
     }
