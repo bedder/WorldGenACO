@@ -11,11 +11,11 @@ public class MenuBehaviour : MonoBehaviour {
     }
 
     public void openIggiWebsite() {
-        System.Diagnostics.Process.Start("http://iggi.org.uk");
+        Application.OpenURL("http://iggi.org.uk");
     }
 
     public void openYccsaWebsite() {
-        System.Diagnostics.Process.Start("https://www.york.ac.uk/yccsa/");
+        Application.OpenURL("https://www.york.ac.uk/yccsa/");
     }
 
     public void quit() {
