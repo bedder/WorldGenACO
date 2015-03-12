@@ -3,16 +3,16 @@ using System.Collections;
 
 public class MapGen : MonoBehaviour {
     // Mapgen dynamics variables
-    public int nTilesX = 10;
-    public int nTilesZ = 10;
-    public float tileRadius = 1f;
+    public int nTilesX = 150;
+    public int nTilesZ = 60;
+    private float tileRadius = 1f;
     public float heightFactor = 10f;
-    public float heightOffset = 0.5f;
-    public float perlinFactor = 0.05f;
-    public float distanceFromWaterFactor = 0.1f;
+    public float heightOffset = -0.075f;
+    public float perlinFactor = 0.03f;
+    public float distanceFromWaterFactor = 0.9f;
     public int maxDistanceFromWater = 30;
-    public int nFoodSources = 5;
-    public int nNests = 1;
+    public int nFoodSources = 20;
+    public int nNests = 5;
 
     // Temp mapgen dynamics variables
     public HexTile baseTile;
