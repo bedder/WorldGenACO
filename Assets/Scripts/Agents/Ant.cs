@@ -12,17 +12,17 @@ public class Ant : MonoBehaviour {
     // Behaviour variables
     public float burden = 10f;
     private float carrying = 0f;
-    public float pheremoneReleaseValue = 1f;
+    public float pheremoneReleaseValue = 100f;
     public float pheremoneCaptureFactor = 1f;
     public float pheremoneFollowingFactor = 2f;
     public float terrainFollowingFactor = 1f;
 
     // Internal logic variables 
     private HexTile location;
-    public List<HexTile> previousLocations;
+    private List<HexTile> previousLocations;
     private bool currentlyWandering = false;
     private int currentWanderDirection;
-    public AntMode mode;
+    private AntMode mode;
 
     // Setters/modifiers
     public void setLocation(HexTile newLocation) {
@@ -175,6 +175,14 @@ public class Ant : MonoBehaviour {
 
     // Unity logic functions
     void Awake() {
+        SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
+        if (settings != null) {
+            pheremoneReleaseValue = settings.pheremoneRelease;
+            pheremoneCaptureFactor = settings.pheremoneAttraction;
+            pheremoneFollowingFactor = settings.pheremoneFollowing;
+            terrainFollowingFactor = settings.terrainFollowing;
+        }
+
         previousLocations = new List<HexTile>();
         mode = AntMode.foraging;
     }

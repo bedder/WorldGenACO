@@ -2,9 +2,9 @@
 using System.Collections;
 
 public class AntController : MonoBehaviour {
-    public float timeBetweenTicks = 0.5f;
-    public float diffusionFactor = 0.2f;
-    public float decayFactor = 0.9f;
+    public float timeBetweenTicks = 0f;
+    public float diffusionFactor = 0.1f;
+    public float decayFactor = 0.95f;
     private float nextTick;
     private bool isPaused;
 
@@ -30,6 +30,12 @@ public class AntController : MonoBehaviour {
     }
 
     void Awake() {
+        SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
+        if (settings != null) {
+            decayFactor = settings.pheremoneDecay;
+            diffusionFactor = settings.pheremoneDiffusion;
+        }
+
         isPaused = false;
         nextTick = 0f;
     }

@@ -42,6 +42,12 @@ public class FoodSource : MonoBehaviour {
 
     // Unity logic functions
     void awake() {
+        SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
+        if (settings != null) {
+            restockFrequency = settings.restockFrequency;
+            restockPerTick = settings.restockFactor;
+        }
+
         foodLevel = initFoodLevel;
         nextRestock = 0;
     }
