@@ -175,6 +175,14 @@ public class Ant : MonoBehaviour {
 
     // Unity logic functions
     void Awake() {
+        SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
+        if (settings != null) {
+            pheremoneReleaseValue = settings.pheremoneRelease;
+            pheremoneCaptureFactor = settings.pheremoneAttraction;
+            pheremoneFollowingFactor = settings.pheremoneFollowing;
+            terrainFollowingFactor = settings.terrainFollowing;
+        }
+
         previousLocations = new List<HexTile>();
         mode = AntMode.foraging;
     }

@@ -30,6 +30,12 @@ public class AntController : MonoBehaviour {
     }
 
     void Awake() {
+        SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
+        if (settings != null) {
+            decayFactor = settings.pheremoneDecay;
+            diffusionFactor = settings.pheremoneDiffusion;
+        }
+
         isPaused = false;
         nextTick = 0f;
     }

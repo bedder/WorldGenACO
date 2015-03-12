@@ -23,4 +23,13 @@ public class SimulationSettings : MonoBehaviour {
     public float pheremoneAttraction = 1f;
     public float pheremoneFollowing = 2f;
     public float terrainFollowing = 1f;
+
+    // Pheremone
+    public float pheremoneDiffusion = 0.1f;
+    public float pheremoneDecay = 0.95f;
+
+
+    void Awake() {
+        DontDestroyOnLoad(gameObject);
+    }
 }

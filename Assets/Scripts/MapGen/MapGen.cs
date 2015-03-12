@@ -175,6 +175,15 @@ public class MapGen : MonoBehaviour {
     }
 
     // Unity logic functions
+    void Awake() {
+        SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
+        if (settings != null) {
+            heightFactor = settings.heightFactor;
+            perlinFactor = settings.perlinFactor;
+            nFoodSources = settings.nFoodSources;
+            nNests = settings.nNests;
+        }
+    }
     void Start() {
         initTiles();
     }

@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class Nest : MonoBehaviour {
     // Nest dynamics variables
-    public float foodPerAntPerTick = 0.1f;
+    public float foodPerAnt = 0.1f;
     public float initialFood = 300f;
     public float allowedExcessFood = 100f;
-    public int ticksBetweenAntSpawns = 5;
-    public int supportedAnts = 10;
+    public int antSpawnFrequency = 5;
+    public int maxAnts = 10;
 
     // Prefab for spawning new ants
     public Ant antPrefab;
@@ -34,14 +34,14 @@ public class Nest : MonoBehaviour {
         newAnt.setLocation(location);
         newAnt.transform.parent = transform.parent;
         ants.Add(newAnt);
-        nextAllowedAnt = currentTick + ticksBetweenAntSpawns;
+        nextAllowedAnt = currentTick + antSpawnFrequency;
     }
 
     public void tick() {
         // Update food levels
-        food -= foodPerAntPerTick * ants.Count;
+        food -= foodPerAnt * ants.Count;
         // Spawn ants if required
-        if (food > allowedExcessFood && currentTick > nextAllowedAnt && ants.Count < supportedAnts)
+        if (food > allowedExcessFood && currentTick > nextAllowedAnt && ants.Count < maxAnts)
             spawnAnt();
         // Kill ants if required
         if (food < 0 && ants.Count > 0)
@@ -51,6 +51,14 @@ public class Nest : MonoBehaviour {
 
     // Unity logic function
     void Awake() {
+        SimulationSettings settings = GameObject.FindObjectOfType<SimulationSettings>();
+        if (settings != null) {
+            initialFood = settings.initialFood;
+            foodPerAnt = settings.foodPerAnt;
+            maxAnts = settings.maxAnts;
+            antSpawnFrequency = settings.antSpawnFrequency;
+        }
+
         ants = new List<Ant>();
         food = initialFood;
         location = gameObject.GetComponent<HexTile>();
