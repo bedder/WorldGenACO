@@ -37,8 +37,8 @@ public class MapGen : MonoBehaviour {
     }
     private void constructHeightMap(int szX, int szY) {
         heightMap = new float[szX, szY];
-        float xOffset = Random.value;
-        float yOffset = Random.value;
+        float xOffset = Random.value * 1000;
+        float yOffset = Random.value * 1000;
         for (int x = 0 ; x < szX ; x++) {
             for (int y = 0 ; y < szY ; y++) {
                 heightMap[x, y] = Mathf.Pow(Mathf.PerlinNoise(perlinFactor * x + xOffset,
