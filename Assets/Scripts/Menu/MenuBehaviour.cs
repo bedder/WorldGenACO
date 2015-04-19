@@ -4,6 +4,15 @@ using System.Collections;
 
 public class MenuBehaviour : MonoBehaviour {
     public SimulationSettings settingsPrefab;
+
+    void Awake() {
+#if UNITY_EDITOR || UNITY_WEBGL || UNITY_WEBPLAYER
+        GameObject.Find("QuitButton").SetActive(false);
+        RectTransform mainMenuPanel = GameObject.Find("MainMenuPanel").GetComponent<RectTransform>() as RectTransform;
+        mainMenuPanel.sizeDelta = new Vector2(mainMenuPanel.sizeDelta.x, mainMenuPanel.sizeDelta.y - 45);
+#endif
+    }
+
     public void startLevel() {
         Application.LoadLevel(1);
     }

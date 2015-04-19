@@ -3,15 +3,16 @@ using System.Collections;
 
 public class MapGen : MonoBehaviour {
     // Mapgen dynamics variables
-    public int nTilesX = 150;
+    public int nTilesX = 110;
     public int nTilesZ = 60;
     private float tileRadius = 1f;
-    public float heightFactor = 10f;
+    public float heightFactor = 20f;
     public float heightOffset = -0.075f;
-    public float perlinFactor = 0.03f;
-    public float distanceFromWaterFactor = 0.9f;
+    public float perlinFactor = 0.015f;
+    public float distanceFromWaterFactor = 0.85f;
     public int maxDistanceFromWater = 30;
-    public int nFoodSources = 20;
+    public float waterRandomFactor = 0.3f;
+    public int nFoodSources = 10;
     public int nNests = 5;
 
     // Temp mapgen dynamics variables
@@ -84,7 +85,7 @@ public class MapGen : MonoBehaviour {
         for (int x = 0 ; x < heightMap.GetLength(0) ; x++) {
             for (int y = 0 ; y < heightMap.GetLength(1) ; y++) {
                 float actualWater = distanceFromWaterFactor * (maxDistanceFromWater - distanceFromWater[x, y]) / maxDistanceFromWater;
-                float randomWater = 0.1f * Mathf.PerlinNoise(perlinFactor * x + xOffset, perlinFactor * y + yOffset);
+                float randomWater = waterRandomFactor * Mathf.PerlinNoise(perlinFactor * x + xOffset, perlinFactor * y + yOffset);
                 waterMap[x, y] = actualWater + randomWater;
             }
         }

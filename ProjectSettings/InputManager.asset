@@ -90,7 +90,7 @@ InputManager:
     descriptiveName: Displays the pheremone level of each tile
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: p
+    positiveButton: l
     altNegativeButton: 
     altPositiveButton: 
     gravity: 0
@@ -122,9 +122,9 @@ InputManager:
     descriptiveName: Pause the simulation
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: escape
+    positiveButton: p
     altNegativeButton: 
-    altPositiveButton: 
+    altPositiveButton: pause
     gravity: 0
     dead: 0
     sensitivity: 0

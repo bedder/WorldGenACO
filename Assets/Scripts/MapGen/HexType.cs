@@ -15,5 +15,6 @@ public enum HexType {
     Snow = 9,
     Tundra = 10,
     Bare = 11,
-    Scorched = 12
+    Scorched = 12,
+    Beach = 13
 };

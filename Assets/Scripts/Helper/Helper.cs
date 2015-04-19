@@ -20,9 +20,10 @@ public class Helper {
                     case 3:
                         return HexType.TropicalForest1;
                     case 4:
+                        return HexType.TropicalForest0;
                     case 5:
                     default:
-                        return HexType.TropicalForest0;
+                        return HexType.Beach;
                 }
             case 1:
                 switch (moistureCategory) {

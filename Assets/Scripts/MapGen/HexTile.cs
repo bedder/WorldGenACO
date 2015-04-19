@@ -9,6 +9,8 @@ public class HexTile : MonoBehaviour {
 
     // Tile qualities
     public HexType type;
+    public int moistureCategory;
+    public int heightCategory;
     public float moisture;
     public float height;
     private FoodSource foodSource;
@@ -55,9 +57,9 @@ public class HexTile : MonoBehaviour {
         neighbours = newNeighbours;
         passable = newPassable;
         moisture = newMoisture;
-        type = Helper.getTileType(
-            Helper.getCategory(height, tileHeightBounds),
-            Helper.getCategory(moisture, tileMoistureBounds));
+        heightCategory = Helper.getCategory(height, tileHeightBounds);
+        moistureCategory = Helper.getCategory(moisture, tileMoistureBounds);
+        type = Helper.getTileType(heightCategory, moistureCategory);
         if (type == HexType.ERROR)
             Destroy(gameObject);
         else 
@@ -101,6 +103,6 @@ public class HexTile : MonoBehaviour {
     }
     // Internal functions
     private void setMaterial(Material newMaterial) {
-        transform.Find("Base").renderer.material = newMaterial;
+        transform.Find("Base").GetComponent<Renderer>().material = newMaterial;
     }
 }
